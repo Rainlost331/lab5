@@ -1,6 +1,8 @@
 import express from 'express';
 
-import userRouter from './resources/users/user.router.js';
+import clientRouter from './resources/client/client.router.js';
+import orderRouter from './resources/order/order.router.js';
+import productRouter from './resources/product/product.router.js';
 
 const app = express();
 
@@ -14,6 +16,8 @@ app.use('/', (req, res, next) => {
   next();
 });
 
-app.use('/users', userRouter);
+app.use('/client', clientRouter);
+app.use('/order', orderRouter);
+app.use('/products', productRouter);
 
 export default app;
