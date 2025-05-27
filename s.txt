@@ -69,3 +69,29 @@ curl.exe -X PUT "http://localhost:4000/products/ВТОРОЙ_ТОВАР_ID" -H "
 :: 5. Проверяем результат
 curl.exe "http://localhost:4000/client/ВАШ_CLIENT_ID/order"
 curl.exe "http://localhost:4000/order/ВАШ_ORDER_ID/products"
+
+Создать клиента: POST http://localhost:4000/client
+Получить всех клиентов: GET http://localhost:4000/client
+Получить клиента по ID: GET http://localhost:4000/client/<id>
+Обновить клиента: PUT http://localhost:4000/client/<id>
+Удалить клиента: DELETE http://localhost:4000/client/<id>
+2. Тестирование заказов (/order)
+Создать заказ: POST http://localhost:4000/order
+Получить все заказы: GET http://localhost:4000/order
+Получить заказ по ID: GET http://localhost:4000/order/<id>
+Получить заказы клиента: GET http://localhost:4000/client/<client_id>/order
+Обновить статус заказа: PUT http://localhost:4000/order/<id>
+Удалить заказ: DELETE http://localhost:4000/order/<id>
+3. Тестирование товаров (/products)
+Создать товар: POST http://localhost:4000/products
+Привязать товар к заказу: PUT http://localhost:4000/products/<product_id>
+Получить все товары: GET http://localhost:4000/products
+Получить товары заказа: GET http://localhost:4000/order/<order_id>/products
+Удалить товар: DELETE http://localhost:4000/products/<product_id>
+4. Комплексные тесты (Клиент делает заказ с товарами)
+Создать клиента: POST http://localhost:4000/client
+Создать товары: POST http://localhost:4000/products (2 раза)
+Создать заказ: POST http://localhost:4000/order
+Привязать товары к заказу: PUT http://localhost:4000/products/<product1_id> и PUT http://localhost:4000/products/<product2_id>
+Проверить заказы клиента: GET http://localhost:4000/client/<client_id>/order
+Проверить товары заказа: GET http://localhost:4000/order/<order_id>/products
