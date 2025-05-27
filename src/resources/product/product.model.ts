@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-export interface IProduct {
+interface ProductConstructor {
   id?: string;
   name?: string;
   price?: number;
@@ -9,19 +9,13 @@ export interface IProduct {
 }
 
 class Product {
-  id: string;
-  name: string;
-  price: number;
-  description: string;
-  orderId: string | null;
+  public id: string;
+  public name: string;
+  public price: number;
+  public description: string;
+  public orderId: string | null;
 
-  constructor({ 
-    id = uuidv4(), 
-    name = 'Product', 
-    price = 0, 
-    description = '', 
-    orderId = null 
-  }: IProduct = {}) {
+  constructor({ id = uuidv4(), name = 'Product', price = 0, description = '', orderId = null }: ProductConstructor = {}) {
     this.id = id;
     this.name = name;
     this.price = price;
@@ -29,7 +23,7 @@ class Product {
     this.orderId = orderId;
   }
 
-  static toResponse(product: Product) {
+  static toResponse(product: Product): { id: string; name: string; price: number; description: string; orderId: string | null } {
     const { id, name, price, description, orderId } = product;
     return { id, name, price, description, orderId };
   }

@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-export interface IClient {
+interface ClientConstructor {
   id?: string;
   name?: string;
   email?: string;
@@ -8,21 +8,21 @@ export interface IClient {
 }
 
 class Client {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
+  public id: string;
+  public name: string;
+  public email: string;
+  public phone: string;
 
-  constructor({ id = uuidv4(), name = 'Client', email = 'client@example.com', phone = '' }: IClient = {}) {
+  constructor({ id = uuidv4(), name = 'Client', email = 'client@example.com', phone = '' }: ClientConstructor = {}) {
     this.id = id;
     this.name = name;
     this.email = email;
     this.phone = phone;
   }
 
-  static toResponse(client: Client): Omit<Client, 'phone'> {
-    const { id, name, email } = client;
-    return { id, name, email };
+  static toResponse(client: Client): { id: string; name: string; email: string; phone: string } {
+    const { id, name, email, phone } = client;
+    return { id, name, email, phone };
   }
 }
 

@@ -1,11 +1,16 @@
-import Product from './product.model';
-
 let products: Product[] = [];
+
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  description: string;
+  orderId: string | null;
+}
 
 const getAll = async (): Promise<Product[]> => [...products];
 
-const getById = async (id: string): Promise<Product | undefined> => 
-  products.find((product) => product.id === id);
+const getById = async (id: string): Promise<Product | undefined> => products.find((product) => product.id === id);
 
 const create = async (product: Product): Promise<Product> => {
   products.push(product);
@@ -15,7 +20,7 @@ const create = async (product: Product): Promise<Product> => {
 const update = async (id: string, updatedProduct: Partial<Product>): Promise<Product | null> => {
   const index = products.findIndex((product) => product.id === id);
   if (index !== -1) {
-    products[index] = { ...products[index], ...updatedProduct };
+    products[index] = { ...products[index], ...updatedProduct } as Product;
     return products[index];
   }
   return null;

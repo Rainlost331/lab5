@@ -1,29 +1,30 @@
 import { v4 as uuidv4 } from 'uuid';
 
-export interface IOrder {
+interface OrderConstructor {
   id?: string;
   clientId: string;
-  products?: string[];
+  products?: Product[];
   status?: string;
   total?: number;
-  createdAt?: string;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  description: string;
+  orderId: string | null;
 }
 
 class Order {
-  id: string;
-  clientId: string;
-  products: string[];
-  status: string;
-  total: number;
-  createdAt: string;
+  public id: string;
+  public clientId: string;
+  public products: Product[];
+  public status: string;
+  public total: number;
+  public createdAt: string;
 
-  constructor({ 
-    id = uuidv4(), 
-    clientId, 
-    products = [], 
-    status = 'pending', 
-    total = 0 
-  }: IOrder) {
+  constructor({ id = uuidv4(), clientId, products = [], status = 'pending', total = 0 }: OrderConstructor) {
     this.id = id;
     this.clientId = clientId;
     this.products = products;
@@ -32,7 +33,7 @@ class Order {
     this.createdAt = new Date().toISOString();
   }
 
-  static toResponse(order: Order) {
+  static toResponse(order: Order): { id: string; clientId: string; products: Product[]; status: string; total: number; createdAt: string } {
     const { id, clientId, products, status, total, createdAt } = order;
     return { id, clientId, products, status, total, createdAt };
   }

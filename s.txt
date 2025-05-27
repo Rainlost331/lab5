@@ -1,71 +1,74 @@
-1. Тестирование клиентов (/client)
-Создать клиента:
-cmd
-curl.exe -X POST "http://localhost:4000/client" -H "Content-Type: application/json" -d "{\"name\": \"Алексей Петров\", \"email\": \"alex@example.com\", \"phone\": \"+79001234567\"}"
-Получить всех клиентов:
-cmd
-curl.exe "http://localhost:4000/client"
-Получить клиента по ID (замените :id):
-cmd
-curl.exe "http://localhost:4000/client/:id"
-Обновить клиента:
-cmd
-curl.exe -X PUT "http://localhost:4000/client/:id" -H "Content-Type: application/json" -d "{\"phone\": \"+79007654321\"}"
-Удалить клиента (с автоматическим удалением его заказов и товаров):
-cmd
-curl.exe -X DELETE "http://localhost:4000/client/:id"
-2. Тестирование заказов (/order)
-Создать заказ (привязанный к клиенту):
-cmd
-curl.exe -X POST "http://localhost:4000/order" -H "Content-Type: application/json" -d "{\"clientId\": \"ВАШ_CLIENT_ID\", \"status\": \"new\", \"total\": 1500}"
-Получить все заказы:
-cmd
-curl.exe "http://localhost:4000/order"
-Получить заказ по ID:
-cmd
-curl.exe "http://localhost:4000/order/:id"
-Получить заказы клиента:
-cmd
-curl.exe "http://localhost:4000/client/:id/order"
-Обновить статус заказа:
-cmd
-curl.exe -X PUT "http://localhost:4000/order/:id" -H "Content-Type: application/json" -d "{\"status\": \"delivered\"}"
-Удалить заказ (с удалением привязанных товаров):
-cmd
-curl.exe -X DELETE "http://localhost:4000/order/:id"
-3. Тестирование товаров (/products)
-Создать товар (без привязки к заказу):
-cmd
-curl.exe -X POST "http://localhost:4000/products" -H "Content-Type: application/json" -d "{\"name\": \"Смартфон\", \"price\": 999, \"description\": \"Новый флагман\"}"
-Привязать товар к заказу (через обновление):
-cmd
-curl.exe -X PUT "http://localhost:4000/products/:id" -H "Content-Type: application/json" -d "{\"orderId\": \"ВАШ_ORDER_ID\"}"
-Получить все товары:
-cmd
-curl.exe "http://localhost:4000/products"
-Получить товары заказа:
-cmd
-curl.exe "http://localhost:4000/order/:id/products"
-Удалить товар:
-cmd
-curl.exe -X DELETE "http://localhost:4000/products/:id"
-4. Комплексные тесты (проверка связей)
-Сценарий: "Клиент делает заказ с товарами"
-cmd
-:: 1. Создаем клиента
-curl.exe -X POST "http://localhost:4000/client" -H "Content-Type: application/json" -d "{\"name\": \"Мария Сидорова\", \"email\": \"maria@example.com\", \"phone\": \"+79005553535\"}"
+Нужно запустить сервер 
+npm instal
+npm start
 
-:: 2. Создаем товары
-curl.exe -X POST "http://localhost:4000/products" -H "Content-Type: application/json" -d "{\"name\": \"Книга\", \"price\": 500, \"description\": \"Программирование на Node.js\"}"
-curl.exe -X POST "http://localhost:4000/products" -H "Content-Type: application/json" -d "{\"name\": \"Наушники\", \"price\": 3000, \"description\": \"Беспроводные\"}"
+открыть второй терминал в эту же директорию
+# 1. Сборка проекта
+npm run build
 
-:: 3. Создаем заказ
-curl.exe -X POST "http://localhost:4000/order" -H "Content-Type: application/json" -d "{\"clientId\": \"ВАШ_CLIENT_ID\", \"status\": \"processing\", \"total\": 3500}"
+# 2. Запуск сервера
+npm start
 
-:: 4. Привязываем товары к заказу
-curl.exe -X PUT "http://localhost:4000/products/ПЕРВЫЙ_ТОВАР_ID" -H "Content-Type: application/json" -d "{\"orderId\": \"ВАШ_ORDER_ID\"}"
-curl.exe -X PUT "http://localhost:4000/products/ВТОРОЙ_ТОВАР_ID" -H "Content-Type: application/json" -d "{\"orderId\": \"ВАШ_ORDER_ID\"}"
+# 3. Проверка корневого эндпоинта
+curl http://localhost:4000/
 
-:: 5. Проверяем результат
-curl.exe "http://localhost:4000/client/ВАШ_CLIENT_ID/order"
-curl.exe "http://localhost:4000/order/ВАШ_ORDER_ID/products"
+# 4. Клиенты (/client)
+# Получение списка клиентов
+curl http://localhost:4000/client
+
+# Создание нового клиента
+curl -X POST http://localhost:4000/client -H "Content-Type: application/json" -d "{\"name\":\"John Doe\",\"email\":\"john@example.com\",\"phone\":\"123456789\"}"
+
+# Получение клиента по ID (замените <client-id> на ID созданного клиента)
+curl http://localhost:4000/client/<client-id>
+
+# Обновление клиента
+curl -X PUT http://localhost:4000/client/<client-id> -H "Content-Type: application/json" -d "{\"name\":\"John Smith\"}"
+
+# Получение заказов клиента
+curl http://localhost:4000/client/<client-id>/order
+
+# Удаление клиента
+curl -X DELETE http://localhost:4000/client/<client-id>
+
+# 5. Заказы (/order)
+# Создание клиента для теста
+curl -X POST http://localhost:4000/client -H "Content-Type: application/json" -d "{\"name\":\"Jane Doe\",\"email\":\"jane@example.com\",\"phone\":\"987654321\"}"
+
+# Создание нового заказа (замените <client-id> на ID клиента)
+curl -X POST http://localhost:4000/order -H "Content-Type: application/json" -d "{\"clientId\":\"<client-id>\",\"products\":[],\"status\":\"pending\",\"total\":0}"
+
+RADME.md# Получение списка заказов
+curl http://localhost:4000/order
+
+# Получение заказа по ID (замените <order-id> на ID заказа)
+curl http://localhost:4000/order/<order-id>
+
+# Обновление заказа
+curl -X PUT http://localhost:4000/order/<order-id> -H "Content-Type: application/json" -d "{\"status\":\"completed\"}"
+
+# Получение продуктов заказа
+curl http://localhost:4000/order/<order-id>/products
+
+# Удаление заказа
+curl -X DELETE http://localhost:4000/order/<order-id>
+
+# 6. Продукты (/products)
+# Создание продукта
+curl -X POST http://localhost:4000/products -H "Content-Type: application/json" -d "{\"name\":\"Laptop\",\"price\":1000,\"description\":\"A powerful laptop\"}"
+
+# Получение списка продуктов
+curl http://localhost:4000/products
+
+# Получение продукта по ID (замените <product-id> на ID продукта)
+curl http://localhost:4000/products/<product-id>
+
+# Обновление продукта
+curl -X PUT http://localhost:4000/products/<product-id> -H "Content-Type: application/json" -d "{\"price\":1200}"
+
+# Удаление продукта
+curl -X DELETE http://localhost:4000/products/<product-id>
+
+# 7. Пользователи (/users)
+# Получение списка пользователей
+curl http://localhost:4000/users
